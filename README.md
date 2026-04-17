@@ -46,8 +46,7 @@ SBMPMS-O-Observability-2026/
 │   ├── Fig2_comparative_sensitivity.pdf  ← Observability vs controllability
 │   └── Fig3_obs_rank_vs_epsilon.pdf   ← Gramian rank vs epsilon
 │
-└── LaTeX/
-    └── main.tex                       ← Full LaTeX source (compile with pdflatex)
+|
 ```
 
 ---

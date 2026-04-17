@@ -13,9 +13,9 @@ Melnikov-Based Observability Breakdown in Singular Bilinear Periodic Matrix Diff
 
 **Authors:**
 - Sri Venkata Durga Sudarsan Madhyannapu
-  (Freshmen Engineering Department, Dr. RVR NRI Institute of Technology, Andhra Pradesh, India)
+  (Freshmen Engineering Department, Dr. RVR NRI Institute of Technology (Deemed to be University), Pothavarappadu Village, Agiripalli Mandal 521212, Vijayawada Rural, Andhra Pradesh, India)
   Email: msvdsudarsan@gmail.com
-- Pradheep Kumar S.
+- Sravanam Pradheep Kumar
   (School of Basic Sciences, SRM University AP, Andhra Pradesh, India)
   Email: sravanampradheepkumar@gmail.com
 

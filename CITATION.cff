@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite as below."
+type: software
+title: "SBMPMS-O: Melnikov-Based Observability Breakdown Code"
+authors:
+  - family-names: "Madhyannapu"
+    given-names: "Sri Venkata Durga Sudarsan"
+    email: "msvdsudarsan@gmail.com"
+    affiliation: "Dr. RVR NRI Institute of Technology (Deemed to be University),
+                  Pothavarappadu, Agiripalli, Eluru District 521212,
+                  Andhra Pradesh, India"
+  - family-names: "Pradheep Kumar"
+    given-names: "S."
+    email: "sravanampradheepkumar@gmail.com"
+    affiliation: "School of Basic Sciences, SRM University AP,
+                  Neerukonda, Mangalagiri, Guntur 522240,
+                  Andhra Pradesh, India"
+repository-code: "https://github.com/SVDSMadhyannapu/SBMPMS-O-Observability-2026"
+keywords:
+  - singular bilinear systems
+  - Melnikov perturbation
+  - observability breakdown
+  - Kalman-Hewer equivalence
+  - Kronecker-free algorithm
+  - descriptor systems
+  - impulsive modes
+  - blind control regime
+license: MIT
+date-released: "2026-04-16"
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Madhyannapu"
+      given-names: "Sri Venkata Durga Sudarsan"
+    - family-names: "Pradheep Kumar"
+      given-names: "S."
+  title: "Melnikov-Based Observability Breakdown in Singular Bilinear
+          Periodic Matrix Differential Systems"
+  journal: "Under Review"
+  year: 2026

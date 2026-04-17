@@ -76,7 +76,7 @@ SBMPMS-O-Observability-2026/
 
 **Step 1:** Clone or download this repository:
 ```
-git clone https://github.com/SVDSMadhyannapu/SBMPMS-O-Observability-2026.git
+git clone https://github.com/msvdsudarsan/SBMPMS-observability.git
 ```
 
 **Step 2:** Open MATLAB and navigate to the `MATLAB/` folder:

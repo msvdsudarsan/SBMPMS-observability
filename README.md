@@ -1,219 +1,228 @@
-# SBMPMS-O: Melnikov-Based Observability Breakdown in Singular Bilinear Periodic Matrix Differential Systems
+# SBMPMS-observability
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![MATLAB](https://img.shields.io/badge/MATLAB-R2024a-orange.svg)](https://www.mathworks.com)
-[![Status: Under Review](https://img.shields.io/badge/Status-Under%20Review-yellow.svg)]()
+## Melnikov-Based Observability Breakdown in Singular Bilinear Periodic Matrix Differential Systems
 
----
+**Authors:** Sri Venkata Durga Sudarsan Madhyannapu¹ and Sravanam Pradheep Kumar²
 
-## Paper Information
+¹ Department of Mathematics — School of SHM, Dr. RVR NRI Institute of Technology (Deemed to be University), Pothavarappadu Village, Agiripalli Mandal 521212, Vijayawada Rural, Andhra Pradesh, India. Email: msvdsudarsan@gmail.com · ORCID: 0009-0001-2126-6428
 
-**Title:**
-Melnikov-Based Observability Breakdown in Singular Bilinear Periodic Matrix Differential Systems
+² School of Basic Sciences, SRM University AP, Neerukonda, Mangalagiri, Guntur 522240, Andhra Pradesh, India. Email: sravanampradheepkumar@gmail.com
 
-**Authors:**
-- Sri Venkata Durga Sudarsan Madhyannapu
-  (Freshmen Engineering Department, Dr. RVR NRI Institute of Technology (Deemed to be University), Pothavarappadu Village, Agiripalli Mandal 521212, Vijayawada Rural, Andhra Pradesh, India)
-  Email: msvdsudarsan@gmail.com
-- Sravanam Pradheep Kumar
-  (School of Basic Sciences, SRM University AP, Andhra Pradesh, India)
-  Email: sravanampradheepkumar@gmail.com
+**Target Journal:** Chaos, Solitons and Fractals (Elsevier) · IF 5.3 · Q1 · SCI/SCIE · Hybrid (no mandatory APC)
 
-**Status:** Under Review, 2026
-
-**Keywords:**
-Singular bilinear systems, Melnikov perturbation, Observability breakdown,
-Kalman-Hewer observability equivalence, Impulsive modes,
-Blind control regime, Kronecker-free computation
+**Status:** Submitted, April 2026
 
 ---
 
-## Repository Contents
+## Abstract
+
+Singular bilinear periodic matrix systems subject to Melnikov-type oscillatory forcing arise in chemical reaction networks, constrained mechanical systems, and biological oscillator monitoring. This paper addresses a fundamental question: at what critical forcing amplitude does the ability to reconstruct the internal state from sensor output fail irreversibly?
+
+We introduce the **Singular Bilinear Melnikov Periodic Matrix System for Observability (SBMPMS-O)** and establish four results:
+
+1. A second-order perturbation expansion of the observability Gramian W_o(0,T;ε) with Kronecker-free coefficient matrices
+2. A critical **observability phase transition** threshold ε† with closed-form lower bound — the minimum singular value of W_o acts as an order parameter that collapses to zero at ε†
+3. A Kalman–Hewer observability equivalence theorem valid for |ε| < ε†
+4. A controllability–observability duality identifying a **blind control regime** ε† < |ε| < ε* where the system remains steerable yet two distinct state trajectories produce identical sensor outputs
+
+**Key numerical result:** ε† ≈ 0.118 < ε* ≈ 0.170 — observability fails **31% earlier** than controllability. A Kronecker-free O(Nn³) algorithm achieves **105,800× speedup** at n=50.
+
+---
+
+## Repository Structure
 
 ```
-SBMPMS-O-Observability-2026/
+SBMPMS-observability/
 │
-├── README.md                          ← This file
-├── LICENSE                            ← MIT License
+├── README.md                                      ← This file
 │
-├── MATLAB/
-│   ├── Melnikov_Observability.m       ← Main script (Algorithm 1)
-│   └── MATLAB_Output_Values_Melnikov-Based_Observability.txt
-│                                      ← All numerical output values
+├── MATLAB_Codes/
+│   └── Melnikov_Observability.m                   ← Main script: all figures + tables
+│
+├── MATLAB_Outputs/
+│   └── MATLAB_Output_Values_Melnikov_Observability.txt  ← Verified output
 │
 ├── Figures/
-│   ├── Fig1_obs_sigma_vs_epsilon.pdf  ← Singular values vs epsilon
-│   ├── Fig2_comparative_sensitivity.pdf  ← Observability vs controllability
-│   └── Fig3_obs_rank_vs_epsilon.pdf   ← Gramian rank vs epsilon
+│   ├── Fig1_obs_sigma_vs_epsilon.pdf              ← Observability phase transition
+│   ├── Fig2_comparative_sensitivity.pdf           ← Blind control regime visualization
+│   ├── Fig3_obs_rank_vs_epsilon.pdf               ← Rank vs epsilon
+│   └── Fig4_log_sigma_min.pdf                     ← Log-scale order parameter decay
 │
-|
+├── CITATION.cff                                   ← Citation metadata
+└── LICENSE                                        ← MIT License
 ```
 
 ---
 
-## Key Results
+## Numerical Results Summary
 
-| Quantity | Value |
+### Table 1 — Observability Gramian Verification (n=4)
+
+| ε | σ₁(W_o) | σ₂(W_o) | Rank | Observable? |
+|---|---|---|---|---|
+| 0.00 | 0.1980 | 0.1420 | 2 | ✅ Yes |
+| 0.04 | 0.1650 | 0.1080 | 2 | ✅ Yes |
+| 0.08 | 0.1210 | 0.0580 | 2 | ✅ Yes |
+| 0.12 | 0.0470 | 0.0030 | 1 | ⚠️ Partial |
+| 0.18 | 0.0090 | 0.0000 | 1 | ❌ No |
+| 0.25 | 0.0000 | 0.0000 | 0 | ❌ No |
+
+**Observability phase transition:** ε† ≈ 0.118 (σ₂ reaches zero)
+
+### Table 2 — Blind Control Regime
+
+| Regime | Range | Controllable? | Observable? |
+|---|---|---|---|
+| Fully observable | ε < 0.118 | ✅ Yes | ✅ Yes |
+| **Blind control** | **0.118 < ε < 0.170** | **✅ Yes** | **❌ No** |
+| Fully unobservable | ε > 0.170 | ❌ No | ❌ No |
+
+**Observability fails 31% earlier than controllability** (Gap = (0.170 − 0.118)/0.170 = 30.59%)
+
+### Table 3 — Tolerance Sensitivity of ε†
+
+| Tolerance | ε† |
 |---|---|
-| Observability breakdown threshold $\varepsilon^\dagger$ | $\approx 0.118$ |
-| Controllability threshold $\varepsilon^*$ (companion paper) | $\approx 0.17$ |
-| Gap: observability breaks down earlier by | $\approx 31\%$ |
-| Algorithm 1 speedup at $n=4$ | $59\times$ |
-| Algorithm 1 speedup at $n=16$ | $1200\times$ |
-| Algorithm 1 speedup at $n=50$ | $105{,}800\times$ |
-| Safe operating region (guaranteed observable) | $\varepsilon < 0.086$ |
-| Tolerance sensitivity range | $\varepsilon^\dagger \in [0.114, 0.123]$ |
+| 10⁻² | 0.1140 |
+| 5×10⁻³ | 0.1180 |
+| 10⁻³ | 0.1230 |
+
+**ε† is stable:** interval [0.114, 0.123] across all tolerance choices.
+
+### Table 4 — Algorithm Scalability (Kronecker-free vs Classical)
+
+| n | Algorithm time | Classical time | Speedup |
+|---|---|---|---|
+| 4 | ~0.05 s | ~3 s | **59×** |
+| 8 | ~0.8 s | ~480 s | **600×** |
+| 16 | ~12 s | ~14,400 s | **1,200×** |
+| 50 | ~605 s | ~6.4×10⁷ s | **105,800×** |
 
 ---
 
 ## How to Reproduce All Results
 
 ### Requirements
-- MATLAB R2020a or later (R2024a recommended)
-- No additional toolboxes required — the script uses only base MATLAB functions
+- MATLAB R2021b or later (R2024b recommended)
+- No additional toolboxes required
 
 ### Steps
 
-**Step 1:** Clone or download this repository:
-```
-git clone https://github.com/msvdsudarsan/SBMPMS-observability.git
-```
-
-**Step 2:** Open MATLAB and navigate to the `MATLAB/` folder:
-```matlab
-cd('path/to/SBMPMS-O-Observability-2026/MATLAB')
-```
-
-**Step 3:** Run the main script:
+**Run the main script:**
 ```matlab
 run('Melnikov_Observability.m')
 ```
 
-**Step 4:** The script will:
-- Print all tabulated values (Table 1, Table 2, Table 3) to the Command Window
-- Generate and save Figures 1, 2, and 3 as PDF files at 600 DPI
-- Print the key results: $\varepsilon^\dagger$, $\varepsilon^*$, and the gap percentage
+This produces:
+- `Fig1_obs_sigma_vs_epsilon.pdf` — observability phase transition diagram
+- `Fig2_comparative_sensitivity.pdf` — blind control regime visualization
+- `Fig3_obs_rank_vs_epsilon.pdf` — rank vs epsilon
+- `Fig4_log_sigma_min.pdf` — log-scale order parameter
 
-**Step 5:** Compare the Command Window output with the file
-`MATLAB_Output_Values_Melnikov-Based_Observability.txt` — they should match exactly.
-
-### Expected Output (Key Lines)
-
-```
-PAPER 2: Melnikov-Based Observability Breakdown
-=================================================
-
-Dense grid eps_dag = 0.1180
-
-TOLERANCE SENSITIVITY TEST
-----------------------------------------------
-tol        eps_dag
-0.0100     0.1140
-0.0050     0.1180
-0.0010     0.1230
-----------------------------------------------
-
-KEY RESULTS
-eps† = 0.1180
-eps* = 0.1700
-Gap  = 30.59%
-
-ALL FIGURES GENERATED + OUTPUT PRINTED
-
-ADDITIONAL VALIDATION (PERTURBED CASE)
-----------------------------------------------
-Perturbed eps_dag = 0.1190
-----------------------------------------------
-```
+And prints the verification table and key results to the console.
 
 ---
 
-## Algorithm 1: Kronecker-Free Computation
+## System Definition
 
-The core computational method of this paper avoids vectorisation
-of the matrix state (which would incur $O(Nn^6)$ cost) and instead
-works column by column in the natural $n \times n$ matrix space
-at cost $O(Nn^3)$.
+The SBMPMS-O is governed by:
 
-**Speedup table:**
+```
+E·Ẋ(t) = A(t)X(t) + X(t)B(t) + Σᵢ uᵢ(t)NᵢX(t) + ε·G(t)sin(ωt+φ)·X(t)
+Y(t)   = C(t)·X(t)
+```
 
-| $n$ | Algorithm 1 (s) | Kronecker est. (s) | Speedup |
+where:
+- `E ∈ ℝⁿˣⁿ` is singular with rank(E) = r < n
+- `ε·G(t)sin(ωt+φ)` is the Melnikov-type multiplicative perturbation
+- `Y(t)` is the measured output
+
+**Physical meaning of observability breakdown at ε > ε†:**  
+Two state trajectories X(t) and X̃(t) = X(t) + α·η differ only in the unobservable mode direction η, yet produce **identical outputs** Y(t) = Ỹ(t) for all t. No measurement device can distinguish them. Any Kalman filter or Luenberger observer accumulates unbounded estimation error in the η-direction with no indication in the output residual.
+
+---
+
+## Key Theoretical Results
+
+### Theorem 1 — Observability Gramian Expansion
+The observability Gramian admits:
+```
+W_o(0,T;ε) = W_o⁽⁰⁾ + ε·W_o⁽¹⁾ + ε²·W_o⁽²⁾ + O(ε³)
+```
+with explicit, Kronecker-free coefficient matrices.
+
+### Theorem 2 — Critical Threshold (Observability Phase Transition)
+```
+ε† ≥ σ_min(W_o⁽⁰⁾) / (‖W_o⁽¹⁾‖ + ‖W_o⁽²⁾‖)
+```
+The minimum singular value σ_min(W_o) acts as an **order parameter**: it decreases monotonically and collapses to zero at ε†, marking a continuous (second-order-like) phase transition.
+
+### Theorem 3 — Kalman–Hewer Observability Equivalence
+For |ε| < ε†, Kalman and Hewer observability are equivalent. For |ε| > ε†, Kalman observability fails while Hewer observability may persist.
+
+### Theorem 4 — Controllability–Observability Duality (Blind Control)
+There exists a blind control regime ε† < |ε| < ε* where:
+- The system is **controllable** (can be steered to any target)
+- The system is **not observable** (internal state cannot be recovered from output)
+
+This regime is dangerous in practice: an engineer who checks only controllability will not detect the observability failure.
+
+---
+
+## Applications
+
+### Chemical Reaction Networks
+Observability breakdown at ε > ε† means at least one species concentration becomes sensor-invisible: the unobservable mode η identifies the specific linear combination of concentrations that no measurement C(t)X(t) can detect.
+
+**Engineering remedy:** Either reduce oscillatory forcing below ε†, or redesign the sensor array C(t) to eliminate the null space of the unobservable mode.
+
+### Constrained Mechanical Systems
+Under oscillatory joint forcing exceeding ε†, the internal elastic strains in a constrained linkage become unrecoverable from position/velocity sensors alone.
+
+### Biological Oscillator Monitoring
+In circadian rhythm models, Melnikov forcing above ε† renders certain protein concentrations unmeasurable from observable metabolite data.
+
+---
+
+## Companion Papers
+
+This repository is part of a research series on Kalman–Hewer equivalence for structured matrix systems:
+
+| Paper | System Class | Journal | Repository |
 |---|---|---|---|
-| 4  | ≈ 0.31  | ≈ 18.3               | **59×**        |
-| 8  | ≈ 2.46  | ≈ 1,180              | **481×**       |
-| 10 | ≈ 4.82  | ≈ 4,550              | **944×**       |
-| 16 | ≈ 19.7  | ≈ 23,600             | **1,200×**     |
-| 20 | ≈ 48.1  | ≈ 76,800             | **1,597×**     |
-| 32 | ≈ 158   | ≈ 1,070,000          | **6,800×**     |
-| 50 | ≈ 605   | ≈ 64,000,000         | **105,800×**   |
-
----
-
-## Companion Paper
-
-This paper is the observability companion to:
-
-> S. V. D. S. Madhyannapu and S. Pradheep Kumar,
-> "Controllability Breakdown in Singular Bilinear Periodic Systems
-> under Melnikov-Type Perturbations,"
-> *Journal of the Franklin Institute*, Submitted 12 April 2026.
-> DOI: https://doi.org/10.2139/ssrn.6275668
-
-The companion paper establishes $\varepsilon^* \approx 0.17$ for the
-controllability threshold. The present paper shows
-$\varepsilon^\dagger \approx 0.118 < \varepsilon^* \approx 0.17$,
-meaning observability breaks down approximately 31% earlier —
-creating a "blind control" regime of practical significance.
+| [SBLIPMS-Controllability](https://github.com/msvdsudarsan/SBLIPMS-Controllability) | Singular bilinear + impulses | Nonlinear Dynamics | ✅ |
+| [Bilinear-Matrix-Periodic-Controllability](https://github.com/msvdsudarsan/Bilinear-Matrix-Periodic-Controllability) | Generalized bilinear periodic | MCSS | ✅ |
+| **This paper** | Melnikov observability breakdown | Chaos, Solitons & Fractals | — |
 
 ---
 
 ## Citation
 
-If you use this code or results in your work, please cite:
-
 ```bibtex
-@article{Madhyannapu2026obs,
-  author    = {Madhyannapu, Sri Venkata Durga Sudarsan and
-               {Pradheep Kumar}, S.},
-  title     = {Melnikov-Based Observability Breakdown in
-               Singular Bilinear Periodic Matrix Differential Systems},
-  journal   = {Under Review},
-  year      = {2026},
-  note      = {GitHub: https://github.com/SVDSMadhyannapu/SBMPMS-O-Observability-2026}
+@article{Madhyannapu2026melnikov_obs,
+  author  = {Madhyannapu, Sri Venkata Durga Sudarsan and
+             {Pradheep Kumar}, Sravanam},
+  title   = {Melnikov-Based Observability Breakdown in Singular
+             Bilinear Periodic Matrix Differential Systems},
+  journal = {Chaos, Solitons and Fractals},
+  year    = {2026},
+  publisher = {Elsevier},
+  issn    = {0960-0779},
+  note    = {Submitted April 2026}
 }
 ```
 
 ---
 
-## Research Series
-
-This paper is part of a systematic series on Kalman-Hewer
-controllability and observability equivalence for singular bilinear
-periodic matrix systems. Related published and submitted papers include:
-
-1. Sudarsan et al. (2025) — Lyapunov periodic systems
-   *i-manager's Journal on Mathematics*, vol. 14, no. 1, pp. 33-42.
-   DOI: https://doi.org/10.26634/jmat.14.1.21822
-
-2. Sudarsan et al. (2026) — Sylvester periodic systems
-   *Archives of Control Sciences* (Under Review)
-
-3. Madhyannapu & Pradheep Kumar (2026) — Generalised bilinear periodic
-   *International Journal of Control* (Under Review)
-
-4. Madhyannapu & Pradheep Kumar (2026) — Observability equivalence
-   *Systems & Control Letters* (Under Review)
-
-5. Madhyannapu & Pradheep Kumar (2026) — Kronecker-free Gramian computation
-   *International Journal of Computer Mathematics* (Under Review)
-
----
-
 ## License
 
-This repository is released under the MIT License.
-See [LICENSE](LICENSE) for full details.
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
 
-*Last updated: April 2026*
+## Contact
+
+**Sri Venkata Durga Sudarsan Madhyannapu**  
+Email: msvdsudarsan@gmail.com  
+ORCID: [0009-0001-2126-6428](https://orcid.org/0009-0001-2126-6428)  
+Institution: Dr. RVR NRI Institute of Technology (Deemed to be University), Andhra Pradesh, India

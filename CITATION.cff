@@ -1,40 +1,53 @@
 cff-version: 1.2.0
-message: "If you use this code, please cite as below."
-type: software
-title: "SBMPMS-O: Melnikov-Based Observability Breakdown Code"
+message: "If you use this code or data, please cite the paper as below."
 authors:
-  - family-names: "Madhyannapu"
-    given-names: "Sri Venkata Durga Sudarsan"
-    email: "msvdsudarsan@gmail.com"
-    affiliation: "Dr. RVR NRI Institute of Technology (Deemed to be University),
-                  Pothavarappadu, Agiripalli, Eluru District 521212,
-                  Andhra Pradesh, India"
-  - family-names: "Pradheep Kumar"
-    given-names: "S."
-    email: "sravanampradheepkumar@gmail.com"
-    affiliation: "School of Basic Sciences, SRM University AP,
-                  Neerukonda, Mangalagiri, Guntur 522240,
-                  Andhra Pradesh, India"
-repository-code: "https://github.com/SVDSMadhyannapu/SBMPMS-O-Observability-2026"
+  - family-names: Madhyannapu
+    given-names: Sri Venkata Durga Sudarsan
+    orcid: "https://orcid.org/0009-0001-2126-6428"
+    affiliation: >-
+      Department of Mathematics, School of SHM,
+      Dr. RVR NRI Institute of Technology (Deemed to be University),
+      Pothavarappadu Village, Agiripalli Mandal 521212,
+      Andhra Pradesh, India
+    email: msvdsudarsan@gmail.com
+  - family-names: Pradheep Kumar
+    given-names: Sravanam
+    affiliation: >-
+      School of Basic Sciences, SRM University AP,
+      Neerukonda, Mangalagiri, Guntur 522240, Andhra Pradesh, India
+    email: sravanampradheepkumar@gmail.com
+title: >-
+  SBMPMS-observability: MATLAB codes for Melnikov-Based Observability
+  Breakdown in Singular Bilinear Periodic Matrix Differential Systems
+version: 1.0.0
+date-released: "2026-04-24"
+url: "https://github.com/msvdsudarsan/SBMPMS-observability"
+repository-code: "https://github.com/msvdsudarsan/SBMPMS-observability"
+license: MIT
 keywords:
   - singular bilinear systems
   - Melnikov perturbation
   - observability breakdown
-  - Kalman-Hewer equivalence
-  - Kronecker-free algorithm
-  - descriptor systems
-  - impulsive modes
+  - observability phase transition
   - blind control regime
-license: MIT
-date-released: "2026-04-16"
+  - Kalman-Hewer equivalence
+  - Gramian expansion
+  - Kronecker-free computation
+  - chemical reaction networks
+  - MATLAB
 preferred-citation:
   type: article
   authors:
-    - family-names: "Madhyannapu"
-      given-names: "Sri Venkata Durga Sudarsan"
-    - family-names: "Pradheep Kumar"
-      given-names: "S."
-  title: "Melnikov-Based Observability Breakdown in Singular Bilinear
-          Periodic Matrix Differential Systems"
-  journal: "Under Review"
+    - family-names: Madhyannapu
+      given-names: Sri Venkata Durga Sudarsan
+      orcid: "https://orcid.org/0009-0001-2126-6428"
+    - family-names: Pradheep Kumar
+      given-names: Sravanam
+  title: >-
+    Melnikov-Based Observability Breakdown in Singular Bilinear
+    Periodic Matrix Differential Systems
+  journal: "Chaos, Solitons and Fractals"
+  publisher: Elsevier
+  issn: "0960-0779"
   year: 2026
+  notes: Submitted April 2026

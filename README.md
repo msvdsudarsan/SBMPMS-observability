@@ -5,7 +5,7 @@
 **Authors:**
 Sri Venkata Durga Sudarsan Madhyannapu¹ and Sravanam Pradheep Kumar²
 
-¹ Department of Mathematics — School of SHM, Dr. RVR NRI Institute of Technology (Deemed to be University),
+¹ Department of Mathematics — School of Sciences, Humanities and Management, Dr. RVR NRI Institute of Technology (Deemed to be University),
 Pothavarappadu Village, Agiripalli Mandal 521212, Vijayawada Rural, Andhra Pradesh, India.
 Email: msvdsudarsan@gmail.com · ORCID: [0009-0001-2126-6428](https://orcid.org/0009-0001-2126-6428)
 

@@ -1,14 +1,17 @@
 cff-version: 1.2.0
-message: "If you use this code or data, please cite the paper as below."
+message: >-
+  If you use this code, data, or figures, please cite the paper below.
+  The BibTeX entry is also available in the README.
+
 authors:
   - family-names: Madhyannapu
     given-names: Sri Venkata Durga Sudarsan
     orcid: "https://orcid.org/0009-0001-2126-6428"
     affiliation: >-
-      Department of Mathematics, School of SHM,
+      Department of Mathematics, School of Sciences, Humanities and Management (SHM),
       Dr. RVR NRI Institute of Technology (Deemed to be University),
       Pothavarappadu Village, Agiripalli Mandal 521212,
-      Andhra Pradesh, India
+      Vijayawada Rural, Andhra Pradesh, India
     email: msvdsudarsan@gmail.com
   - family-names: Pradheep Kumar
     given-names: Sravanam
@@ -16,25 +19,47 @@ authors:
       School of Basic Sciences, SRM University AP,
       Neerukonda, Mangalagiri, Guntur 522240, Andhra Pradesh, India
     email: sravanampradheepkumar@gmail.com
+
 title: >-
-  SBMPMS-observability: MATLAB codes for Melnikov-Based Observability
-  Breakdown in Singular Bilinear Periodic Matrix Differential Systems
-version: 1.0.0
-date-released: "2026-04-24"
+  SBMPMS-observability: MATLAB codes for "Melnikov-Based Observability
+  Breakdown in Singular Bilinear Periodic Matrix Differential Systems"
+
+abstract: >-
+  This repository contains the MATLAB implementation, verified numerical
+  outputs, and publication-quality figures for the paper "Melnikov-Based
+  Observability Breakdown in Singular Bilinear Periodic Matrix Differential
+  Systems" (submitted to Chaos, Solitons and Fractals, Elsevier, May 2026).
+  Key results: observability breakdown threshold eps_dagger = 0.118,
+  controllability threshold eps_star = 0.170, controllability-observability
+  gap = 30.59% (exact, MATLAB verified), threshold stable on [0.114, 0.123]
+  across a tenfold tolerance range, Kronecker-free O(Nn^3) algorithm with
+  105800x speedup at n=50.
+
+version: 2.0.0
+date-released: "2026-05-18"
+
 url: "https://github.com/msvdsudarsan/SBMPMS-observability"
 repository-code: "https://github.com/msvdsudarsan/SBMPMS-observability"
+
 license: MIT
+
 keywords:
   - singular bilinear systems
   - Melnikov perturbation
   - observability breakdown
   - observability phase transition
+  - codimension-one rank bifurcation
   - blind control regime
   - Kalman-Hewer equivalence
-  - Gramian expansion
+  - observability Gramian expansion
+  - controllability-observability duality
   - Kronecker-free computation
   - chemical reaction networks
+  - singular descriptor systems
   - MATLAB
+  - nonlinear dynamics
+  - Chaos Solitons and Fractals
+
 preferred-citation:
   type: article
   authors:
@@ -47,7 +72,11 @@ preferred-citation:
     Melnikov-Based Observability Breakdown in Singular Bilinear
     Periodic Matrix Differential Systems
   journal: "Chaos, Solitons and Fractals"
-  publisher: Elsevier
+  publisher:
+    name: Elsevier
   issn: "0960-0779"
   year: 2026
-  notes: Submitted April 2026
+  notes: >-
+    Submitted May 2026. Key results: eps_dagger = 0.118, eps_star = 0.170,
+    gap = 30.59%, threshold stable on [0.114, 0.123],
+    105800x algorithmic speedup at n=50.

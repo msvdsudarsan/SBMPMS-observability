@@ -36,7 +36,7 @@ abstract: >-
   105800x speedup at n=50.
 
 version: 2.0.0
-date-released: "2026-05-18"
+date-released: "2026-05-14"
 
 url: "https://github.com/msvdsudarsan/SBMPMS-observability"
 repository-code: "https://github.com/msvdsudarsan/SBMPMS-observability"

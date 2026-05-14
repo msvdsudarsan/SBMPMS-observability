@@ -226,7 +226,7 @@ Gap = **30.59%** (verified numerically to four significant figures).
 
 | Paper | System Class | Journal | Status |
 |---|---|---|---|
-| [SBLIPMS-Controllability](https://github.com/msvdsudarsan/SBLIPMS-Controllability) | Singular bilinear + impulses | Nonlinear Analysis: Hybrid Systems | Ready for Submission |
+| [SBLIPMS-Controllability](https://github.com/msvdsudarsan/SBLIPMS-Impulse-KH-Controllability) | Singular bilinear + impulses | Nonlinear Analysis: Hybrid Systems | Ready for Submission |
 | [Bilinear-Matrix-Periodic-Controllability](https://github.com/msvdsudarsan/Bilinear-Matrix-Periodic-Controllability) | Generalised bilinear periodic | MCSS (Springer) | With Editor |
 | **This paper** | Melnikov observability breakdown | Chaos, Solitons & Fractals | Submitted May 2026 |
 

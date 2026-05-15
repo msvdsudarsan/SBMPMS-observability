@@ -1,6 +1,7 @@
 # SBMPMS-observability
 
 ## Melnikov-Based Observability Breakdown in Singular Bilinear Periodic Matrix Differential Systems
+DOI: https://doi.org/10.5281/zenodo.20196743
 
 **Authors:**
 Sri Venkata Durga Sudarsan Madhyannapu¹ and Sravanam Pradheep Kumar²

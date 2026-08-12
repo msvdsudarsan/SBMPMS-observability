@@ -1,16 +1,22 @@
 % ============================================================
-% Independent verification of the observability Gramian for the
-% n=4 example (eq. 14) of CHAOS-D-26-04430.
+% MATLAB verification of the perturbative observability Gramian
+% for the n=4 worked example (eq. 14) of CHAOS-D-26-04430.
 %
-% This solves the DAE E*Xdot = A(t)*X + X*B(t) + eps*G(t)*sin(2*pi*t)*X
-% directly, WITHOUT assuming the algebraic reduction x3=x4=0 in
-% advance -- x3,x4 are solved algebraically at every RHS evaluation,
-% so if that reduction is wrong, this script will show it (x3,x4
-% will come out nonzero).
+% This script computes the zeroth-, first-, and second-order
+% observability Gramian coefficients W_o^(0), W_o^(1), and W_o^(2)
+% using the stated system matrices and the algebraic constraints.
+% The algebraic components x3 and x4 are solved at every RHS
+% evaluation rather than assumed to vanish in advance.
 %
-% Run this exactly as-is first. Compare console output against:
-%   Wo0 singular values (paper claims): 0.198, 0.142
-%   Wo0 singular values (independent Python cross-check): 1.435, 0.0327
+% The resulting second-order approximation
+%
+%   W_o(0,T;eps) ≈ W_o^(0) + eps W_o^(1) + eps^2 W_o^(2)
+%
+% is used as a consistency check on the perturbative Gramian
+% expansion reported in the manuscript. The full direct-integration
+% computation for selected eps values is provided separately in
+% Melnikov_Observability.m, while verify_observability.py provides
+% an independent Python/SciPy direct-integration cross-check.
 % ============================================================
 
 clear; clc;

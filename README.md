@@ -56,7 +56,7 @@ and establish four results:
 - Directly integrating eq. (14) gives σ₁(W_o⁽⁰⁾) = 1.4353, σ₂(W_o⁽⁰⁾) = 0.0327 at ε = 0
 - Over ε ∈ [0, 0.25] (and, in an extended check, ε ∈ [−1, 2]), σ₂ stays well clear of zero and grows mildly with ε — this instance does **not** exhibit an observability breakdown threshold
 - Confirmed to 4 decimal places by two independent implementations (MATLAB R2026a and Python/SciPy)
-- - Kronecker-free O(Nn³) algorithm: projected 481× speedup at n = 8 and
+- Kronecker-free O(Nn³) algorithm: projected 481× speedup at n = 8 and
   projected 105,800× at n = 50, based on the proven O(Nn³) versus O(Nn⁶)
   complexity ratio; the Kronecker baseline was not directly benchmarked
 
@@ -73,7 +73,7 @@ SBMPMS-observability/
 │
 ├── MATLAB_Codes/
 │   ├── Melnikov_Observability.m                           ← Main script (direct integration, no hard-coded values)
-│   ├── verify_observability.py                            ← Independent Python/SciPy cross-check
+│   ├── verify_observability.m                            ← Independent Python/SciPy cross-check
 │   └── README.md                                          ← How to run
 │
 ├── MATLAB_Outputs/
@@ -106,7 +106,7 @@ exhibit. See the provenance note in `MATLAB_Outputs/` for details.
 This instance remains full rank throughout the tested range, and an
 extended sweep to ε ∈ [−1, 2] shows the same pattern with no rank
 collapse observed. The algebraic rank-loss criterion
-(Theorem 4.6 in the manuscript) and the threshold bound (Theorem 4.3)
+(Theorem 4.7 in the manuscript) and the threshold bound (Theorem 4.3)
 remain general results about the SBMPMS-O system class; this instance
 simply does not satisfy the conditions under which a threshold is
 attained. Constructing and verifying an instance that does attain the
@@ -114,17 +114,17 @@ threshold is identified in the manuscript as necessary follow-up work.
 
 ### Algorithm Scalability
 
-| n  | Algorithm 1  | Classical (Kronecker)  | Speedup        | Basis |
-|----|-------------|-------------------------|----------------|-------|
-| 4  | measured    | measured                | 59×            | measured |
-| 8  | measured    | measured                | **481×**       | measured |
-| 16 | measured    | projected               | ~1,200×        | complexity-based projection |
-| 50 | measured    | infeasible              | ~105,800×      | complexity-based projection (O(Nn³) vs O(Nn⁶)) |
+| n  | Algorithm 1       | Classical (Kronecker) | Speedup          | Basis |
+|----|--------------------|------------------------|------------------|-------|
+| 4  | measured           | projected              | 59×              | complexity-based projection |
+| 8  | measured           | projected              | 481×             | complexity-based projection |
+| 16 | projected          | projected              | ~1,200×          | complexity-based projection |
+| 50 | projected          | infeasible (projected) | ~105,800×        | complexity-based projection (O(Nn³) vs O(Nn⁶)) |
 
-Only Algorithm 1's own running time is measured for n > 8; the
-Kronecker-baseline figures and all n > 8 comparisons are projections
-from the proven complexity bounds, not benchmark runs, per the
-manuscript's response to Reviewer #2 (Comment 8).
+Only Algorithm 1's own running time is directly measured for n ≤ 8.
+All Kronecker-baseline figures, and all Algorithm 1 values for n > 8,
+are complexity-based projections from the proven O(Nn³) and O(Nn⁶)
+complexity bounds, not benchmark runs.
 
 ---
 

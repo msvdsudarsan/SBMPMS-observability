@@ -75,9 +75,9 @@ preferred-citation:
     name: Elsevier
   issn: "0960-0779"
   year: 2026
-  notes: >-
-  Submitted to Chaos, Solitons and Fractals in 2026. The worked numerical
-  example does not attain an observability breakdown threshold over the
-  tested range; the repository provides direct-integration verification,
-  perturbative Gramian verification, and an independent Python/SciPy
-  cross-check.
+   notes: >-
+    Submitted to Chaos, Solitons and Fractals in 2026. The worked numerical
+    example does not attain an observability breakdown threshold over the
+    tested range; the repository provides direct-integration verification,
+    perturbative Gramian verification, and an independent Python/SciPy
+    cross-check.

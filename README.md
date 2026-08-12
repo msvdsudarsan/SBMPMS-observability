@@ -77,8 +77,7 @@ SBMPMS-observability/
 ├── MATLAB_Outputs/
 │   └── MATLAB_Output_Values_Melnikov-Based_Observabilit.txt  ← Verified console output, with provenance note
 │
-└── Figures/
-    └── Fig1_obs_sigma_vs_epsilon.pdf         ← σ₁, σ₂ vs ε, directly computed
+└── Fig1_obs_sigma_vs_epsilon.pdf         ← σ₁, σ₂ vs ε, directly computed
 ```
 
 Three figures present in an earlier version of this repository

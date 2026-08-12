@@ -72,15 +72,15 @@ SBMPMS-observability/
 ├── LICENSE                                                ← MIT License
 │
 ├── MATLAB_Codes/
-│   ├── Melnikov_Observability.m                           ← Main script (direct integration, no hard-coded values)
-│   ├── verify_observability.m                            ← Independent Python/SciPy cross-check
-│   └── README.md                                          ← How to run
+│   ├── Melnikov_Observability.m                           ← Main MATLAB script (direct integration, no hard-coded values)
+│   ├── verify_observability.m                             ← MATLAB perturbative Gramian verification
+│   ├── verify_observability.py                            ← Independent Python/SciPy direct-integration cross-check
+│   └── README.md                                          ← How to run the numerical verification
 │
 ├── MATLAB_Outputs/
-│   └── MATLAB_Output_Values_Melnikov-Based_Observabilit.txt  ← Verified console output, with provenance note
+│   └── MATLAB_Output_Values_Melnikov-Based_Observabilit.txt  ← Verified MATLAB console output
 │
-└── Fig1_obs_sigma_vs_epsilon.pdf         ← σ₁, σ₂ vs ε, directly computed
-```
+└── Fig1_obs_sigma_vs_epsilon.pdf                         ← Directly computed σ₁, σ₂ vs ε
 
 Three figures present in an earlier version of this repository
 (comparative observability-vs-controllability sensitivity, a rank

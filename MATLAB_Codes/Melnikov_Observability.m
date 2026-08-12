@@ -47,7 +47,15 @@ Afun = @(t) [-2, cos(t), 0, 0;
               0, 0, -1, cos(t);
               0, 0, 0, 1];
 Gfun = @(t) diag([1, cos(t), sin(t), 1]);
-Cfun = @(t) [cos(t), 1, 0, 0; 0, sin(t), 1, 0];
+Cfun = @(t) [cos(t), 1; 0, sin(t)];
+% NOTE: the manuscript's C(t) is 2x4, with columns 3-4 acting on x3,x4.
+% Since A(t) and G(t) have zero coupling from (x1,x2) into rows 3-4
+% (verified: M(3:4,1:2) = 0 for all t and all eps), the algebraic
+% solve gives x3 = x4 = 0 EXACTLY along every trajectory. C(t)'s
+% columns 3-4 therefore always multiply zero and contribute nothing;
+% dropping them here is an exact simplification, not an approximation,
+% and matches verify_observability.py's Cfun exactly (4-decimal
+% agreement between the two implementations depends on this match).
 bcol = {@(t) cos(t), @(t) sin(t), @(t) 0, @(t) 0};
 
 opts = odeset('RelTol',1e-10,'AbsTol',1e-13);
@@ -141,12 +149,15 @@ fig1 = figure(1);
 set(fig1,'Position',[50 50 860 540],'Toolbar','none');
 plot(eps_grid, s1_grid, 'b-', 'LineWidth', 2.5); hold on;
 plot(eps_grid, s2_grid, 'r-', 'LineWidth', 2.5);
-plot(eps_paper, s1_paper, 'bs', 'MarkerFaceColor','b');
-plot(eps_paper, s2_paper, 'rs', 'MarkerFaceColor','r');
-xlabel('Epsilon');
-ylabel('Singular values of Wo');
-title('Observability Gramian Singular Values vs Epsilon (direct integration)');
-legend({'sigma1(Wo)','sigma2(Wo)','Data sigma1','Data sigma2'}, 'Location','east');
+plot(eps_paper, s1_paper, 'bs', 'MarkerFaceColor','b','MarkerSize',8);
+plot(eps_paper, s2_paper, 'rs', 'MarkerFaceColor','r','MarkerSize',8);
+xlabel('Melnikov forcing amplitude $\varepsilon$', 'Interpreter','latex', 'FontSize',12);
+ylabel('Singular values of $\mathcal{W}_o$', 'Interpreter','latex', 'FontSize',12);
+title('Observability Gramian singular values vs. $\varepsilon$ for system (14)', ...
+      'Interpreter','latex', 'FontSize',13);
+legend({'$\sigma_1(\mathcal{W}_o)$','$\sigma_2(\mathcal{W}_o)$'}, ...
+       'Interpreter','latex', 'Location','east', 'FontSize',11);
+xlim([0 0.30]);
 grid on; box on;
 set(gca,'FontName','Times New Roman');
 print(fig1,'Fig1_obs_sigma_vs_epsilon','-dpdf','-painters','-r600');

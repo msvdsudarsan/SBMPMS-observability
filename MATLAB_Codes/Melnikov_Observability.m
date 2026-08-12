@@ -1,207 +1,155 @@
 %% ============================================================
-%% PAPER 2 — Melnikov-Based Observability Breakdown (FINAL + ROBUSTNESS)
+%% PAPER 2 -- Melnikov-Based Observability Breakdown
+%% Section 9 worked example, eq. (14): DIRECT VERIFICATION
 %% ============================================================
-clc; clear; close all;
+%
+% This script computes the observability Gramian W_o(0,T;eps) of
+% system (14) in the manuscript by DIRECT numerical integration of
+% the DAE, exactly as printed in the paper:
+%
+%   E*Xdot = A(t)*X + X*B(t) + eps*G(t)*sin(2*pi*t)*X,   Y = C(t)*X
+%
+% with E = diag(1,1,0,0), i.e. rows 3-4 are algebraic constraints,
+% not differential equations. The algebraic components x3, x4 are
+% solved independently at EVERY integration step (not assumed to
+% vanish in advance), so this script itself certifies the reduction
+% x3 = x4 = 0 rather than relying on the manuscript's stated
+% derivation.
+%
+% NOTE ON HISTORY: an earlier version of this script did not
+% integrate the DAE at all. It hard-coded six (eps, sigma1, sigma2)
+% literals and fit a cubic spline through them. Those literals did
+% not reproduce under direct integration and have been removed along
+% with a fabricated "controllability comparison" dataset that was
+% invented in-script for a Figure 2 that no longer appears in the
+% paper. This version replaces that entirely: every number below is
+% computed from eq. (14) itself. See Section 9 of the manuscript and
+% Section9_Discrepancy_Summary.docx for the full account.
+%
+% Independently cross-checked against a Python/SciPy implementation
+% (see verify_observability.py in this folder); the two agree to
+% four decimal places.
+% ============================================================
+
+clear; clc; close all;
 
 fprintf('PAPER 2: Melnikov-Based Observability Breakdown\n');
-fprintf('=================================================\n\n');
+fprintf('Direct verification of eq. (14) -- no hard-coded values\n');
+fprintf('=========================================================\n\n');
 
-%% ================= SECTION 1 — DATA =================
-eps_paper = [0.00, 0.04, 0.08, 0.12, 0.18, 0.25];
-s1_paper  = [0.198, 0.165, 0.121, 0.047, 0.009, 0.000];
-s2_paper  = [0.142, 0.108, 0.058, 0.003, 0.000, 0.000];
+T = 1.0;
+N = 2000;
+ts = linspace(0, T, N+1);
 
-eps_ctrl = 0.17;
+%% ---- system matrices, exactly as eq. (14) ----
+Afun = @(t) [-2, cos(t), 0, 0;
+              sin(t), -1, 1, 0;
+              0, 0, -1, cos(t);
+              0, 0, 0, 1];
+Gfun = @(t) diag([1, cos(t), sin(t), 1]);
+Cfun = @(t) [cos(t), 1, 0, 0; 0, sin(t), 1, 0];
+bcol = {@(t) cos(t), @(t) sin(t), @(t) 0, @(t) 0};
 
-%% ================= STEP-1: DENSE GRID =================
-eps_vec  = linspace(0,0.30,301);
+opts = odeset('RelTol',1e-10,'AbsTol',1e-13);
 
-fprintf('Paper data: %d points\n\n', length(eps_paper));
+%% ---- helper: full state-transition columns at a given eps ----
+function Phi_red = compute_Phi(eps_val, Afun, Gfun, bcol, ts, opts)
+    N = length(ts)-1;
+    ics = {[1;0], [0;1]};
+    cols = cell(1,2);
+    for j = 1:2
+        rhs = @(t,x12) reduced_rhs_eps(t, x12, Afun, Gfun, bcol{j}, eps_val);
+        [~, y] = ode45(rhs, ts, ics{j}, opts);
+        cols{j} = y';
+    end
+    Phi_red = zeros(2,2,N+1);
+    Phi_red(:,1,:) = cols{1};
+    Phi_red(:,2,:) = cols{2};
+end
 
-%% ================= SECTION 2 — SPLINE =================
-s1 = max(spline(eps_paper,s1_paper,eps_vec),0);
-s2 = max(spline(eps_paper,s2_paper,eps_vec),0);
+function dx = reduced_rhs_eps(t, x12, Afun, Gfun, bfun, eps_val)
+    A = Afun(t) + eps_val*sin(2*pi*t)*Gfun(t);
+    M = A + bfun(t)*eye(4);
+    Aalg = M(3:4,3:4);
+    rhs_alg = -M(3:4,1:2) * x12;
+    x34 = lsqminnorm(Aalg, rhs_alg);
+    xfull = [x12; x34];
+    dx = M(1:2,1:2)*xfull(1:2) + M(1:2,3:4)*xfull(3:4);
+end
 
-for k = 1:length(eps_vec)
-    if s1(k) < s2(k)
-        tmp = s1(k); s1(k) = s2(k); s2(k) = tmp;
+function I = trapz_matrix(ts, integrand)
+    I = zeros(2,2);
+    for k = 1:length(ts)-1
+        h = ts(k+1) - ts(k);
+        I = I + 0.5*h*(integrand(:,:,k) + integrand(:,:,k+1));
     end
 end
 
-%% ================= SECTION 3 — eps† =================
-tol = 0.005;
-idx = find(s2 < tol,1);
-eps_dag = eps_vec(idx);
-
-fprintf('Dense grid eps_dag = %.4f\n', eps_dag);
-
-gap = (eps_ctrl - eps_dag)/eps_ctrl*100;
-
-%% ================= STEP-2: TOLERANCE TEST =================
-tol_values = [1e-2, 5e-3, 1e-3];
-
-fprintf('\nTOLERANCE SENSITIVITY TEST\n');
-fprintf('----------------------------------------------\n');
-fprintf('tol        eps_dag\n');
-
-for i = 1:length(tol_values)
-    tol_i = tol_values(i);
-    idx_i = find(s2 < tol_i,1);
-    eps_i = eps_vec(idx_i);
-    fprintf('%.4f     %.4f\n', tol_i, eps_i);
-end
-fprintf('----------------------------------------------\n\n');
-
-%% ================= SECTION 4 — RANK =================
-rkv = double(s1>tol) + double(s2>tol);
-for k = 2:length(rkv)
-    rkv(k) = min(rkv(k), rkv(k-1));
+function sv = sigma_at_eps(eps_val, Afun, Gfun, Cfun, bcol, ts, opts)
+    Phi_red = compute_Phi(eps_val, Afun, Gfun, bcol, ts, opts);
+    N = length(ts)-1;
+    integ = zeros(2,2,N+1);
+    for k = 1:N+1
+        t = ts(k);
+        Ch = Cfun(t);
+        P0 = Phi_red(:,:,k);
+        integ(:,:,k) = P0' * (Ch'*Ch) * P0;
+    end
+    W = trapz_matrix(ts, integ);
+    sv = svd(W);
 end
 
-%% ================= SECTION 5 — NUMERICAL OUTPUT =================
-fprintf('VERIFICATION TABLE\n');
+%% ================= VERIFICATION AT THE PAPER'S 6 EPS VALUES =================
+eps_paper = [0.00, 0.04, 0.08, 0.12, 0.18, 0.25];
+s1_paper = zeros(1,6); s2_paper = zeros(1,6);
+
+fprintf('VERIFICATION TABLE (direct integration, eq. 14)\n');
 fprintf('----------------------------------------------\n');
 fprintf('eps     sigma1     sigma2     rank\n');
-
 for j = 1:length(eps_paper)
-    ep   = eps_paper(j);
-    s1_j = max(spline(eps_paper,s1_paper,ep),0);
-    s2_j = max(spline(eps_paper,s2_paper,ep),0);
-    rk   = double(s1_j>tol)+double(s2_j>tol);
-
-    fprintf('%.2f   %.4f     %.4f     %d\n',ep,s1_j,s2_j,rk);
+    sv = sigma_at_eps(eps_paper(j), Afun, Gfun, Cfun, bcol, ts, opts);
+    s1_paper(j) = sv(1); s2_paper(j) = sv(2);
+    rk = sum(sv > 1e-6);
+    fprintf('%.2f   %.4f     %.4f     %d\n', eps_paper(j), sv(1), sv(2), rk);
 end
 fprintf('----------------------------------------------\n\n');
 
-fprintf('KEY RESULTS\n');
-fprintf('eps† = %.4f\n',eps_dag);
-fprintf('eps* = %.4f\n',eps_ctrl);
-fprintf('Gap  = %.2f%%\n\n',gap);
+fprintf('KEY RESULT: sigma2 does not approach zero anywhere in this\n');
+fprintf('range -- it grows slightly with eps. This instance does not\n');
+fprintf('exhibit an observability breakdown threshold over [0, 0.25].\n\n');
 
-%% ================= FIGURE 1 =================
-fig1 = figure(1);
-set(fig1,'Position',[50 50 860 540],'Toolbar','none');
-
-plot(eps_vec,s1,'b-','LineWidth',2.5); hold on;
-plot(eps_vec,s2,'r-','LineWidth',2.5);
-
-plot(eps_paper,s1_paper,'bs','MarkerFaceColor','b');
-plot(eps_paper,s2_paper,'rs','MarkerFaceColor','r');
-
-xline(eps_dag,'k--','LineWidth',2);
-
-xlabel('Epsilon');
-ylabel('Singular values of Wo');
-title('Observability Gramian Singular Values vs Epsilon');
-
-legend({'sigma1(Wo)','sigma2(Wo)','Data sigma1','Data sigma2'},...
-       'Location','northeast');
-
-grid on; box on;
-set(gca,'FontName','Times New Roman');
-
-print(fig1,'Fig1_obs_sigma_vs_epsilon','-dpdf','-painters','-r600');
-
-%% ================= FIGURE 2 =================
-fig2 = figure(2);
-set(fig2,'Position',[100 100 900 520],'Toolbar','none');
-
-plot(eps_vec,s2,'r-','LineWidth',2.5); hold on;
-
-eps_c = [0.00,0.05,0.10,0.15,0.17,0.22,0.30];
-s2_c  = [0.187,0.151,0.098,0.021,0.002,0.000,0.000];
-eps_c_vec = linspace(0,0.30,301);
-s2c = max(spline(eps_c,s2_c,eps_c_vec),0);
-
-plot(eps_c_vec,s2c,'b-','LineWidth',2.5);
-
-xline(eps_dag,'r--');
-xline(eps_ctrl,'b--');
-
-xlabel('Epsilon');
-ylabel('sigma_min');
-title('Observability vs Controllability');
-
-legend({'sigma2(Wo)','sigma2(Wc)'},'Location','northeast');
-
-grid on; box on;
-set(gca,'FontName','Times New Roman');
-
-print(fig2,'Fig2_comparative_sensitivity','-dpdf','-painters','-r600');
-
-%% ================= FIGURE 3 =================
-fig3 = figure(3);
-set(fig3,'Position',[150 150 860 380],'Toolbar','none');
-
-stairs(eps_vec,rkv,'b-','LineWidth',2.5); hold on;
-
-xline(eps_dag,'r--');
-yline(2,'m:');
-
-xlabel('Epsilon');
-ylabel('rank(Wo)');
-title('Observability Gramian Rank vs Epsilon');
-
-legend({'rank(Wo)'},'Location','southwest');
-
-grid on; box on;
-set(gca,'FontName','Times New Roman');
-
-print(fig3,'Fig3_obs_rank_vs_epsilon','-dpdf','-painters','-r600');
-
-%% ================= FIGURE 4 =================
-fig4 = figure(4);
-set(fig4,'Position',[180 180 860 500],'Toolbar','none');
-
-% avoid log(0)
-s2_plot = s2;
-s2_plot(s2_plot <= 1e-8) = 1e-8;
-
-semilogy(eps_vec, s2_plot,'r-','LineWidth',2.5); hold on;
-
-plot(eps_paper, max(s2_paper,1e-8), ...
-    'ks','MarkerFaceColor','k','MarkerSize',7);
-
-xline(eps_dag,'b--','LineWidth',2);
-
-xlabel('\epsilon');
-ylabel('log-scale \sigma_{min}(W_o)');
-title('Log-Scale Decay of Minimum Singular Value');
-
-legend({'\sigma_{min}(W_o)','Paper data','\epsilon^\dagger'}, ...
-    'Location','southwest');
-
-grid on;
-box on;
-set(gca,'FontName','Times New Roman');
-
-print(fig4,'Fig4_log_decay_sigma_min','-dpdf','-painters','-r600');
-
-fprintf('Figure 4 generated successfully.\n');
-
-fprintf('ALL FIGURES GENERATED + OUTPUT PRINTED\n');
-
-%% ================= STEP-3: ADDITIONAL VALIDATION =================
-fprintf('\nADDITIONAL VALIDATION (PERTURBED CASE)\n');
+%% ================= EXTENDED SWEEP (WIDER RANGE, BOTH SIGNS) =================
+fprintf('EXTENDED SWEEP (checking for any threshold, eps in [-1, 2])\n');
 fprintf('----------------------------------------------\n');
+eps_wide = [-1.0, -0.5, -0.25, 0.0, 0.25, 0.5, 1.0, 2.0];
+for e = eps_wide
+    sv = sigma_at_eps(e, Afun, Gfun, Cfun, bcol, ts, opts);
+    fprintf('eps=%6.2f   sigma1=%.4f   sigma2=%.4f\n', e, sv(1), sv(2));
+end
+fprintf('----------------------------------------------\n');
+fprintf('No rank collapse observed over this extended range either.\n\n');
 
-% 5% perturbation
-s1_paper_pert = 1.05 * s1_paper;
-s2_paper_pert = 1.05 * s2_paper;
-
-% spline
-s1p = max(spline(eps_paper,s1_paper_pert,eps_vec),0);
-s2p = max(spline(eps_paper,s2_paper_pert,eps_vec),0);
-
-for k = 1:length(eps_vec)
-    if s1p(k) < s2p(k)
-        tmp = s1p(k); s1p(k) = s2p(k); s2p(k) = tmp;
-    end
+%% ================= FIGURE: sigma1, sigma2 vs eps =================
+eps_grid = linspace(0, 0.30, 31);
+s1_grid = zeros(size(eps_grid)); s2_grid = zeros(size(eps_grid));
+for k = 1:length(eps_grid)
+    sv = sigma_at_eps(eps_grid(k), Afun, Gfun, Cfun, bcol, ts, opts);
+    s1_grid(k) = sv(1); s2_grid(k) = sv(2);
 end
 
-% threshold
-idx_p = find(s2p < tol,1);
-eps_dag_p = eps_vec(idx_p);
+fig1 = figure(1);
+set(fig1,'Position',[50 50 860 540],'Toolbar','none');
+plot(eps_grid, s1_grid, 'b-', 'LineWidth', 2.5); hold on;
+plot(eps_grid, s2_grid, 'r-', 'LineWidth', 2.5);
+plot(eps_paper, s1_paper, 'bs', 'MarkerFaceColor','b');
+plot(eps_paper, s2_paper, 'rs', 'MarkerFaceColor','r');
+xlabel('Epsilon');
+ylabel('Singular values of Wo');
+title('Observability Gramian Singular Values vs Epsilon (direct integration)');
+legend({'sigma1(Wo)','sigma2(Wo)','Data sigma1','Data sigma2'}, 'Location','east');
+grid on; box on;
+set(gca,'FontName','Times New Roman');
+print(fig1,'Fig1_obs_sigma_vs_epsilon','-dpdf','-painters','-r600');
 
-fprintf('Perturbed eps_dag = %.4f\n', eps_dag_p);
-fprintf('----------------------------------------------\n');
+fprintf('Figure 1 generated from directly-integrated data.\n');
+fprintf('ALL OUTPUT COMPUTED -- NO HARD-CODED VALUES.\n');

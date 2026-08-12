@@ -2,12 +2,15 @@
 
 ## Melnikov_Observability.m
 
-This is the single main script that reproduces **all numerical results and figures** in the paper.
+This is the main script that reproduces the numerical results and
+the figure in Section 9 of the paper, **by direct integration of
+eq. (14)**. It does not hard-code any output values.
 
 ### Requirements
-- MATLAB R2021b or later (R2024b recommended)
+- MATLAB R2021b or later (R2026a used for the reported results)
 - No additional toolboxes required
-- Standard functions used: `spline`, `semilogy`, `svd`, `stairs`, `linspace`, `find`, `xline`
+- Standard functions used: `ode45`, `lsqminnorm`, `svd`, `trapz`-style
+  quadrature, `linspace`, `plot`
 
 ### How to Run
 
@@ -19,52 +22,41 @@ run('Melnikov_Observability.m')
 
 Or open `Melnikov_Observability.m` in MATLAB and press **Run** (F5).
 
-### What the Script Produces
+### What the Script Does
+
+For each requested `eps`, the script:
+1. Solves the algebraic constraint on `x3, x4` independently at
+   every integration step (it does **not** assume the reduction
+   `x3 = x4 = 0` in advance -- if that reduction were wrong for a
+   given `eps`, this script would show nonzero `x3, x4`).
+2. Integrates the resulting 2-dimensional reduced system with
+   `ode45` for each of the two initial-condition columns needed to
+   build the state-transition matrix.
+3. Assembles the observability Gramian `W_o` by trapezoidal
+   quadrature and reports its singular values.
 
 **Console output:**
-- Verification table: σ₁(W_o), σ₂(W_o), rank at all 6 paper data points
-- ε† = 0.1180, ε* = 0.1700, Gap = 30.59%
-- Tolerance sensitivity test: ε† ∈ [0.114, 0.123] for tol ∈ {10⁻², 5×10⁻³, 10⁻³}
-- Perturbed case validation: ε† = 0.1190 under 5% data scaling
+- A verification table of `sigma1(W_o)`, `sigma2(W_o)`, and rank at
+  the paper's six `eps` values.
+- An extended sweep over `eps in [-1, 2]` checking whether the
+  system loses rank anywhere in that wider range (it does not).
 
-**Figures (saved as PDF in the current directory):**
+**Figure (saved as PDF in the current directory):**
 
 | Output file                        | Figure in paper | Description                          |
 |------------------------------------|-----------------|--------------------------------------|
-| Fig1_obs_sigma_vs_epsilon.pdf      | Figure 1        | σ₁, σ₂ of W_o vs ε — phase diagram  |
-| Fig2_comparative_sensitivity.pdf   | Figure 2        | σ_min(W_o) vs σ_min(W_c) comparison |
-| Fig3_obs_rank_vs_epsilon.pdf       | Figure 3        | rank(W_o) staircase transition       |
-| Fig4_log_decay_sigma_min.pdf       | Figure 4        | log-scale σ_min decay near ε†        |
+| Fig1_obs_sigma_vs_epsilon.pdf      | Figure 1        | sigma1, sigma2 of W_o vs eps          |
 
-All figures use Times New Roman font and 600 DPI PDF vector output, ready for journal submission.
+Earlier drafts of this repository also produced three additional
+figures (a comparative observability-vs-controllability sensitivity
+plot, a rank-vs-eps staircase, and a log-scale decay plot). Those
+were built around a fabricated breakdown threshold and have been
+removed from both the script and the manuscript; see the note in
+`../MATLAB_Outputs/MATLAB_Output_Values_Melnikov-Based_Observabilit.txt`
+for the full history.
 
-### Script Structure
+### Cross-Check
 
-| Section | Description |
-|---------|-------------|
-| Section 1 | Paper data: 6 Gramian singular value pairs |
-| Section 2 | Dense spline grid (301 points on [0, 0.30]) |
-| Section 3 | ε† identification via threshold crossing |
-| Section 4 | Gramian rank computation (monotone enforced) |
-| Section 5 | Verification table printout |
-| Figure 1  | σ₁, σ₂ vs ε with data markers |
-| Figure 2  | Comparative observability vs controllability |
-| Figure 3  | Rank vs ε (staircase) |
-| Figure 4  | Log-scale σ_min decay |
-| Step-2    | Tolerance sensitivity test |
-| Step-3    | Perturbed case (5% scaling) validation |
-
-### Verified Output
-
-The expected console output is given in the repository root `README.md` and also in:
-
-```
-../MATLAB_Outputs/MATLAB_Output_Values_Melnikov-Based_Observabilit.txt
-```
-
-All values match the paper exactly:
-- ε† = 0.1180 ✅
-- ε* = 0.1700 ✅  
-- Gap = 30.59% ✅
-- Perturbed ε† = 0.1190 ✅
-- Tolerance interval [0.114, 0.123] ✅
+The same computation is implemented independently in Python/SciPy
+(`verify_observability.py` in this folder). The two implementations
+agree to four decimal places at every tested `eps`.

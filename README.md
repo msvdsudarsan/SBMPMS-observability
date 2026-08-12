@@ -15,7 +15,25 @@ Email: sravanampradheepkumar@gmail.com
 
 **Target Journal:** [Chaos, Solitons and Fractals](https://www.sciencedirect.com/journal/chaos-solitons-and-fractals) (Elsevier) · IF 5.3 · Q1 · SCI/SCIE
 
-**Status:** Submitted — May 2026 (Manuscript Version V18)
+**Status:** Under revision — August 2026
+
+---
+
+## A note on this revision
+
+An earlier version of this repository and the accompanying manuscript
+reported, for the worked example in Section 9 (eq. 14), a rank-collapse
+threshold ε† ≈ 0.118 and a 30.59% gap relative to the companion
+controllability paper's threshold. Those numbers did not reproduce
+under direct numerical integration of eq. (14) — the script that
+produced them did not actually integrate the system; it fit a spline
+through six hard-coded literals with no identified source. Both the
+manuscript and this repository have been corrected: eq. (14) is kept
+exactly as originally stated, `Melnikov_Observability.m` now computes
+everything directly from it, and Section 9 of the manuscript has been
+rewritten to report what that direct computation actually shows (see
+below). The theoretical results (Sections 3–7) do not depend on this
+specific numerical instance and are unaffected.
 
 ---
 
@@ -30,15 +48,15 @@ We introduce the **Singular Bilinear Melnikov Periodic Matrix System for Observa
 and establish four results:
 
 1. A second-order perturbation expansion of the observability Gramian W_o(0,T;ε) with **Kronecker-free** coefficient matrices
-2. A critical **observability phase transition** threshold ε† with closed-form lower bound — the minimum singular value of W_o acts as an order parameter for a **codimension-one rank bifurcation**
+2. A critical **observability rank-loss** threshold ε† with a closed-form sufficient lower bound — the minimum singular value of W_o acts as an order parameter for a codimension-one rank bifurcation, for systems in this class that attain the threshold
 3. A Kalman–Hewer observability equivalence theorem valid for |ε| < ε†, with proved failure for |ε| > ε†
 4. A controllability–observability duality identifying a **blind control regime** ε† < |ε| < ε* where the system remains steerable yet two distinct state trajectories produce identical sensor outputs
 
-**Key numerical results:**
-- ε† ≈ 0.118 < ε* ≈ 0.170 — observability fails **30.59% earlier** than controllability
-- ε† stable on [0.114, 0.123] across a tenfold tolerance range — threshold is numerically robust
-- 5% perturbed validation: ε† = 0.119 — confirms threshold is a genuine structural property
-- Kronecker-free O(Nn³) algorithm achieves **105,800× speedup** at n = 50
+**Key numerical results (worked example, eq. 14):**
+- Directly integrating eq. (14) gives σ₁(W_o⁽⁰⁾) = 1.4353, σ₂(W_o⁽⁰⁾) = 0.0327 at ε = 0
+- Over ε ∈ [0, 0.25] (and, in an extended check, ε ∈ [−1, 2]), σ₂ stays well clear of zero and grows mildly with ε — this instance does **not** exhibit an observability breakdown threshold
+- Confirmed to 4 decimal places by two independent implementations (MATLAB R2026a and Python/SciPy)
+- Kronecker-free O(Nn³) algorithm: **481×** measured speedup at n = 8 (feasible for direct Kronecker comparison), extrapolated to **105,800×** at n = 50 based on the proven complexity ratio
 
 ---
 
@@ -52,121 +70,78 @@ SBMPMS-observability/
 ├── LICENSE                                                ← MIT License
 │
 ├── MATLAB_Codes/
-│   ├── Melnikov_Observability.m                           ← Main script (all figures + tables + robustness)
+│   ├── Melnikov_Observability.m                           ← Main script (direct integration, no hard-coded values)
+│   ├── verify_observability.py                            ← Independent Python/SciPy cross-check
 │   └── README.md                                          ← How to run
 │
 ├── MATLAB_Outputs/
-│   └── MATLAB_Output_Values_Melnikov-Based_Observabilit.txt  ← Verified console output
+│   └── MATLAB_Output_Values_Melnikov-Based_Observabilit.txt  ← Verified console output, with provenance note
 │
 └── Figures/
-    ├── Fig1_obs_sigma_vs_epsilon.pdf        ← Observability phase diagram (σ₁, σ₂ vs ε)
-    ├── Fig2_comparative_sensitivity.pdf     ← Blind control regime (obs vs ctrl comparison)
-    ├── Fig3_obs_rank_vs_epsilon.pdf         ← Gramian rank staircase transition
-    └── Fig4_log_decay_sigma_min.pdf         ← Log-scale order parameter decay
+    └── Fig1_obs_sigma_vs_epsilon.pdf         ← σ₁, σ₂ vs ε, directly computed
 ```
+
+Three figures present in an earlier version of this repository
+(comparative observability-vs-controllability sensitivity, a rank
+staircase, and a log-scale decay plot) have been removed: each was
+built to illustrate a threshold crossing that this instance does not
+exhibit. See the provenance note in `MATLAB_Outputs/` for details.
 
 ---
 
 ## Numerical Results Summary
 
-### Table 1 — Observability Gramian Verification (n = 4, tol = 5×10⁻³)
+### Observability Gramian, direct integration of eq. (14)
 
 | ε    | σ₁(W_o) | σ₂(W_o) | Rank | Observable? |
 |------|---------|---------|------|-------------|
-| 0.00 | 0.1980  | 0.1420  | 2    | ✅ Yes       |
-| 0.04 | 0.1650  | 0.1080  | 2    | ✅ Yes       |
-| 0.08 | 0.1210  | 0.0580  | 2    | ✅ Yes       |
-| 0.12 | 0.0470  | 0.0030  | 1    | ⚠️ Partial  |
-| 0.18 | 0.0090  | 0.0000  | 1    | ❌ No        |
-| 0.25 | 0.0000  | 0.0000  | 0    | ❌ No        |
+| 0.00 | 1.4353  | 0.0327  | 2    | ✅ Yes       |
+| 0.04 | 1.4539  | 0.0331  | 2    | ✅ Yes       |
+| 0.08 | 1.4729  | 0.0335  | 2    | ✅ Yes       |
+| 0.12 | 1.4923  | 0.0339  | 2    | ✅ Yes       |
+| 0.18 | 1.5220  | 0.0345  | 2    | ✅ Yes       |
+| 0.25 | 1.5578  | 0.0352  | 2    | ✅ Yes       |
 
-### Table 2 — Blind Control Regime
+This instance remains full rank throughout the tested range, and an
+extended sweep to ε ∈ [−1, 2] shows the same pattern with no rank
+collapse observed. The algebraic rank-loss criterion
+(Theorem 4.6 in the manuscript) and the threshold bound (Theorem 4.3)
+remain general results about the SBMPMS-O system class; this instance
+simply does not satisfy the conditions under which a threshold is
+attained. Constructing and verifying an instance that does attain the
+threshold is identified in the manuscript as necessary follow-up work.
 
-| Regime               | Range                  | Controllable? | Observable? |
-|----------------------|------------------------|---------------|-------------|
-| Fully observable     | ε < 0.118              | ✅ Yes         | ✅ Yes       |
-| **Blind control** ⚠️ | **0.118 < ε < 0.170**  | **✅ Yes**     | **❌ No**   |
-| Fully unobservable   | ε > 0.170              | ❌ No          | ❌ No        |
+### Algorithm Scalability
 
-Gap = (0.170 − 0.118) / 0.170 = **30.59%** (MATLAB verified, exact)
+| n  | Algorithm 1  | Classical (Kronecker)  | Speedup        | Basis |
+|----|-------------|-------------------------|----------------|-------|
+| 4  | measured    | measured                | 59×            | measured |
+| 8  | measured    | measured                | **481×**       | measured |
+| 16 | measured    | projected               | ~1,200×        | complexity-based projection |
+| 50 | measured    | infeasible              | ~105,800×      | complexity-based projection (O(Nn³) vs O(Nn⁶)) |
 
-### Table 3 — Tolerance Sensitivity of ε†
-
-| Tolerance | ε†     |
-|-----------|--------|
-| 10⁻²      | 0.1140 |
-| 5×10⁻³    | 0.1180 |
-| 10⁻³      | 0.1230 |
-
-Stable interval [0.114, 0.123] confirms threshold is structurally genuine, not tolerance-dependent.
-
-### Table 4 — Algorithm Scalability
-
-| n  | Algorithm 1  | Classical      | Speedup        |
-|----|-------------|----------------|----------------|
-| 4  | ~0.05 s     | ~3 s           | **59×**        |
-| 8  | ~0.8 s      | ~480 s         | **600×**       |
-| 16 | ~12 s       | ~14,400 s      | **1,200×**     |
-| 50 | ~605 s      | ~6.4×10⁷ s     | **105,800×**   |
-
-Speedup arises from O(Nn³) vs O(Nn⁶) complexity via column-separable variational structure.
+Only Algorithm 1's own running time is measured for n > 8; the
+Kronecker-baseline figures and all n > 8 comparisons are projections
+from the proven complexity bounds, not benchmark runs, per the
+manuscript's response to Reviewer #2 (Comment 8).
 
 ---
 
 ## How to Reproduce All Results
 
-### Requirements
-- MATLAB R2021b or later (R2024b recommended)
-- No additional toolboxes required
-
-### Run
-
+### MATLAB
 ```matlab
 cd('MATLAB_Codes')
 run('Melnikov_Observability.m')
 ```
 
-### Expected console output (verified)
-
+### Python cross-check
+```bash
+python3 MATLAB_Codes/verify_observability.py
 ```
-PAPER 2: Melnikov-Based Observability Breakdown
-=================================================
-Paper data: 6 points
 
-Dense grid eps_dag = 0.1180
-
-TOLERANCE SENSITIVITY TEST
-----------------------------------------------
-tol        eps_dag
-0.0100     0.1140
-0.0050     0.1180
-0.0010     0.1230
-----------------------------------------------
-
-VERIFICATION TABLE
-----------------------------------------------
-eps     sigma1     sigma2     rank
-0.00   0.1980     0.1420     2
-0.04   0.1650     0.1080     2
-0.08   0.1210     0.0580     2
-0.12   0.0470     0.0030     1
-0.18   0.0090     0.0000     1
-0.25   0.0000     0.0000     0
-----------------------------------------------
-
-KEY RESULTS
-eps† = 0.1180
-eps* = 0.1700
-Gap  = 30.59%
-
-Figure 4 generated successfully.
-ALL FIGURES GENERATED + OUTPUT PRINTED
-
-ADDITIONAL VALIDATION (PERTURBED CASE)
-----------------------------------------------
-Perturbed eps_dag = 0.1190
-----------------------------------------------
-```
+Both compute everything directly from eq. (14); neither reads or
+depends on any hard-coded output value.
 
 ---
 
@@ -175,7 +150,7 @@ Perturbed eps_dag = 0.1190
 The SBMPMS-O is governed by:
 
 ```
-E·Ẋ(t) = A(t)X(t) + X(t)B(t) + Σᵢ uᵢ(t)NᵢX(t) + ε·G(t)sin(ωt+φ)·X(t)
+E·Ẋ(t) = A(t)X(t) + X(t)B(t) + ε·G(t)sin(ωt+φ)·X(t)
 Y(t)   = C(t)·X(t)
 ```
 
@@ -184,10 +159,13 @@ where:
 - `ε·G(t)sin(ωt+φ)` is the Melnikov-type multiplicative perturbation
 - `Y(t)` is the measured sensor output
 
-**Physical meaning of breakdown at ε > ε†:**
+**Physical meaning of breakdown, for a system that attains ε > ε†:**
 Two trajectories X(t) and X̃(t) = X(t) + α·η differ only in the unobservable direction η
-yet produce **identical outputs** Y(t) = Ỹ(t) for all t.
-No observer can distinguish them — any Kalman filter accumulates **unbounded silent estimation error**.
+yet produce identical outputs Y(t) = Ỹ(t) for all t.
+No observer can distinguish them — any Kalman filter accumulates unbounded silent estimation error.
+This mechanism is established at the level of the general theorems; the worked example in this
+repository illustrates the surrounding machinery (Gramian expansion, Algorithm 1) but does not
+itself reach this regime.
 
 ---
 
@@ -198,11 +176,11 @@ No observer can distinguish them — any Kalman filter accumulates **unbounded s
 W_o(0,T;ε) = W_o⁽⁰⁾ + ε·W_o⁽¹⁾ + ε²·W_o⁽²⁾ + O(ε³)
 ```
 
-### Theorem 2 — Critical Threshold
+### Theorem 2 — Critical Threshold (sufficient condition)
 ```
 ε† ≥ σ_min(W_o⁽⁰⁾) / (‖W_o⁽¹⁾‖ + ‖W_o⁽²⁾‖)
 ```
-σ_min(W_o) is the order parameter; ε† is the codimension-one bifurcation point.
+σ_min(W_o) is the order parameter; ε† is the codimension-one bifurcation point for systems that attain it.
 
 ### Theorem 3 — Kalman–Hewer Equivalence
 - |ε| < ε†: Kalman ⟺ Hewer observability (equivalent)
@@ -210,16 +188,15 @@ W_o(0,T;ε) = W_o⁽⁰⁾ + ε·W_o⁽¹⁾ + ε²·W_o⁽²⁾ + O(ε³)
 
 ### Theorem 4 — Blind Control Duality
 Blind control regime ε† < |ε| < ε*:
-system is controllable but not observable.
-Gap = **30.59%** (verified numerically to four significant figures).
+system is controllable but not observable, for systems in this class that attain both thresholds.
 
 ---
 
 ## Applications
 
-- **Chemical reaction networks:** Identifies which species become sensor-invisible above ε†
-- **Constrained mechanical systems:** Detects unrecoverable elastic strain modes
-- **Biological oscillators:** Flags unmeasurable protein concentrations in circadian models
+- **Chemical reaction networks:** identifies which species would become sensor-invisible above a system's ε†, where one exists
+- **Constrained mechanical systems:** detects unrecoverable elastic strain modes
+- **Biological oscillators:** flags unmeasurable protein concentrations in circadian models
 
 ---
 
@@ -227,9 +204,9 @@ Gap = **30.59%** (verified numerically to four significant figures).
 
 | Paper | System Class | Journal | Status |
 |---|---|---|---|
-| [SBLIPMS-Controllability](https://github.com/msvdsudarsan/SBLIPMS-Impulse-KH-Controllability) | Singular bilinear + impulses | Nonlinear Analysis: Hybrid Systems | Ready for Submission |
+| [SBLIPMS-Controllability](https://github.com/msvdsudarsan/SBLIPMS-Impulse-KH-Controllability) | Singular bilinear + impulses | ISA Transactions | Resubmitted |
 | [Bilinear-Matrix-Periodic-Controllability](https://github.com/msvdsudarsan/Bilinear-Matrix-Periodic-Controllability) | Generalised bilinear periodic | MCSS (Springer) | With Editor |
-| **This paper** | Melnikov observability breakdown | Chaos, Solitons & Fractals | Submitted May 2026 |
+| **This paper** | Melnikov observability breakdown | Chaos, Solitons & Fractals | Under revision |
 
 ---
 
@@ -245,7 +222,7 @@ Gap = **30.59%** (verified numerically to four significant figures).
   year      = {2026},
   publisher = {Elsevier},
   issn      = {0960-0779},
-  note      = {Submitted May 2026}
+  note      = {Under revision}
 }
 ```
 

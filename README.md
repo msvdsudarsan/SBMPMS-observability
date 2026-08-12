@@ -181,7 +181,9 @@ W_o(0,T;ε) = W_o⁽⁰⁾ + ε·W_o⁽¹⁾ + ε²·W_o⁽²⁾ + O(ε³)
 ```
 ε† ≥ σ_min(W_o⁽⁰⁾) / (‖W_o⁽¹⁾‖ + ‖W_o⁽²⁾‖)
 ```
-σ_min(W_o) is the order parameter; ε† is the codimension-one bifurcation point for systems that attain it.
+σ_min(W_o) acts as an order-parameter-like quantity; for systems that
+attain the threshold, ε† may be viewed descriptively as a codimension-one
+rank transition of the Gramian.
 
 ### Theorem 3 — Kalman–Hewer Equivalence
 - |ε| < ε†: Kalman ⟺ Hewer observability (equivalent)

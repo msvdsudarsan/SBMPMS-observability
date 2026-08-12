@@ -32,26 +32,25 @@ No rank collapse observed over this extended range either.
 
 Figure 1 generated from directly-integrated data.
 ALL OUTPUT COMPUTED -- NO HARD-CODED VALUES.
+>> 
 
----------------------------------------------------------------
-NOTE ON PROVENANCE (added during CSF revision, August 2026)
----------------------------------------------------------------
-An earlier version of Melnikov_Observability.m did not integrate
-eq. (14) at all. It hard-coded the six (eps, sigma1, sigma2) pairs
-below as literals and fit a cubic spline through them to produce
-the console table, threshold estimate (eps_dagger = 0.1180), and
-all four figures:
+Max |x3|,|x4| found (should be ~0): 0.00e+00
 
-  eps_paper = [0.00, 0.04, 0.08, 0.12, 0.18, 0.25]
-  s1_paper  = [0.198, 0.165, 0.121, 0.047, 0.009, 0.000]
-  s2_paper  = [0.142, 0.108, 0.058, 0.003, 0.000, 0.000]
+Wo^(0) =
+    0.4571    0.6443
+    0.6443    1.0109
 
-No source for these six numbers was found in this repository or
-elsewhere. When eq. (14), as printed in the manuscript, is
-integrated directly -- with the algebraic constraints on x3, x4
-solved independently at every step rather than assumed -- it does
-not reproduce them; it instead gives the values recorded above,
-confirmed independently in MATLAB R2026a and Python/SciPy to four
-decimal places. This file, and Melnikov_Observability.m, have been
-corrected accordingly. See Section9_Discrepancy_Summary in the
-manuscript's supplementary materials for the full account.
+singular values of Wo^(0): 1.4353  0.0327
+
+||Wo^(1)||_2 = 0.3692
+||Wo^(2)||_2 = 0.0384
+
+=== sigma1, sigma2 at the papers 6 eps values ===
+eps=0.00  sigma1=1.4353  sigma2=0.0327
+eps=0.04  sigma1=1.4500  sigma2=0.0331
+eps=0.08  sigma1=1.4649  sigma2=0.0335
+eps=0.12  sigma1=1.4800  sigma2=0.0338
+eps=0.18  sigma1=1.5028  sigma2=0.0344
+eps=0.25  sigma1=1.5297  sigma2=0.0350
+>> 
+>> 

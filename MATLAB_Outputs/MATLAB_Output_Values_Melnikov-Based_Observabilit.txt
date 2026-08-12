@@ -53,4 +53,3 @@ eps=0.12  sigma1=1.4800  sigma2=0.0338
 eps=0.18  sigma1=1.5028  sigma2=0.0344
 eps=0.25  sigma1=1.5297  sigma2=0.0350
 >> 
->> 

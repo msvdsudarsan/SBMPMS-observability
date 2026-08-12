@@ -25,15 +25,14 @@ title: >-
   Breakdown in Singular Bilinear Periodic Matrix Differential Systems"
 
 abstract: >-
-  This repository contains the MATLAB implementation, verified numerical
-  outputs, and publication-quality figures for the paper "Melnikov-Based
+  This repository contains the MATLAB and Python implementations, verified
+  numerical outputs, and publication-quality figure for the paper "Melnikov-Based
   Observability Breakdown in Singular Bilinear Periodic Matrix Differential
-  Systems" (submitted to Chaos, Solitons and Fractals, Elsevier, May 2026).
-  Key results: observability breakdown threshold eps_dagger = 0.118,
-  controllability threshold eps_star = 0.170, controllability-observability
-  gap = 30.59% (exact, MATLAB verified), threshold stable on [0.114, 0.123]
-  across a tenfold tolerance range, Kronecker-free O(Nn^3) algorithm with
-  105800x speedup at n=50.
+  Systems" submitted to Chaos, Solitons and Fractals (Elsevier). The worked
+  example is verified by direct numerical integration and does not exhibit
+  observability rank collapse over the tested range. The repository also includes
+  a perturbative Gramian verification and an independent Python/SciPy
+  direct-integration cross-check.
 
 version: 2.0.0
 date-released: "2026-05-14"
@@ -77,6 +76,8 @@ preferred-citation:
   issn: "0960-0779"
   year: 2026
   notes: >-
-    Submitted May 2026. Key results: eps_dagger = 0.118, eps_star = 0.170,
-    gap = 30.59%, threshold stable on [0.114, 0.123],
-    105800x algorithmic speedup at n=50.
+  Submitted to Chaos, Solitons and Fractals in 2026. The worked numerical
+  example does not attain an observability breakdown threshold over the
+  tested range; the repository provides direct-integration verification,
+  perturbative Gramian verification, and an independent Python/SciPy
+  cross-check.

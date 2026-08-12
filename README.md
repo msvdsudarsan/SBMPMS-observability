@@ -56,7 +56,9 @@ and establish four results:
 - Directly integrating eq. (14) gives σ₁(W_o⁽⁰⁾) = 1.4353, σ₂(W_o⁽⁰⁾) = 0.0327 at ε = 0
 - Over ε ∈ [0, 0.25] (and, in an extended check, ε ∈ [−1, 2]), σ₂ stays well clear of zero and grows mildly with ε — this instance does **not** exhibit an observability breakdown threshold
 - Confirmed to 4 decimal places by two independent implementations (MATLAB R2026a and Python/SciPy)
-- Kronecker-free O(Nn³) algorithm: **481×** measured speedup at n = 8 (feasible for direct Kronecker comparison), extrapolated to **105,800×** at n = 50 based on the proven complexity ratio
+- - Kronecker-free O(Nn³) algorithm: projected 481× speedup at n = 8 and
+  projected 105,800× at n = 50, based on the proven O(Nn³) versus O(Nn⁶)
+  complexity ratio; the Kronecker baseline was not directly benchmarked
 
 ---
 

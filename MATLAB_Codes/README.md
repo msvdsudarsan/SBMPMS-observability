@@ -83,12 +83,17 @@ Gramian directly from eq. (14) for each selected $\varepsilon$.
 
 ### Cross-Check
 
-The direct-integration results are independently checked using the
-separate MATLAB script `verify_observability.m`, which verifies the
-perturbative Gramian coefficients $W_o^{(0)}$, $W_o^{(1)}$, and
-$W_o^{(2)}$.
+The full direct-integration computation is independently implemented
+in Python/SciPy in `verify_observability.py`. It solves eq. (14)
+directly, including the algebraic components `x3` and `x4` at every
+right-hand-side evaluation, and computes the observability Gramian
+singular values at the paper's six $\varepsilon$ values and over an
+extended sweep.
 
-The direct-integration script `Melnikov_Observability.m` computes the
-full observability Gramian directly from eq. (14), while
-`verify_observability.m` provides an independent perturbation-based
-consistency check.
+The MATLAB script `Melnikov_Observability.m` and the independent
+Python/SciPy implementation `verify_observability.py` agree to four
+decimal places at the tested $\varepsilon$ values.
+
+The separate MATLAB script `verify_observability.m` provides an
+additional consistency check of the perturbative Gramian coefficients
+$W_o^{(0)}$, $W_o^{(1)}$, and $W_o^{(2)}$.

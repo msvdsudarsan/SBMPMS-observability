@@ -1,0 +1,83 @@
+cff-version: 1.2.0
+message: >-
+  If you use this code, data, or figures, please cite the paper below.
+  The BibTeX entry is also available in the README.
+
+authors:
+  - family-names: Madhyannapu
+    given-names: Sri Venkata Durga Sudarsan
+    orcid: "https://orcid.org/0009-0001-2126-6428"
+    affiliation: >-
+      Department of Mathematics, School of Sciences, Humanities and Management (SHM),
+      Dr. RVR NRI Institute of Technology (Deemed to be University),
+      Pothavarappadu Village, Agiripalli Mandal 521212,
+      Vijayawada Rural, Andhra Pradesh, India
+    email: msvdsudarsan@gmail.com
+  - family-names: Pradheep Kumar
+    given-names: Sravanam
+    affiliation: >-
+      School of Basic Sciences, SRM University AP,
+      Neerukonda, Mangalagiri, Guntur 522240, Andhra Pradesh, India
+    email: sravanampradheepkumar@gmail.com
+
+title: >-
+  SBMPMS-observability: MATLAB codes for "Melnikov-Based Observability
+  Breakdown in Singular Bilinear Periodic Matrix Differential Systems"
+
+abstract: >-
+  This repository contains the MATLAB and Python implementations, verified
+  numerical outputs, and publication-quality figure for the paper "Melnikov-Based
+  Observability Breakdown in Singular Bilinear Periodic Matrix Differential
+  Systems" submitted to Chaos, Solitons and Fractals (Elsevier). The worked
+  example is verified by direct numerical integration and does not exhibit
+  observability rank collapse over the tested range. The repository also includes
+  a perturbative Gramian verification and an independent Python/SciPy
+  direct-integration cross-check.
+
+version: 2.0.0
+date-released: "2026-05-14"
+
+url: "https://github.com/msvdsudarsan/SBMPMS-observability"
+repository-code: "https://github.com/msvdsudarsan/SBMPMS-observability"
+
+license: MIT
+
+keywords:
+  - singular bilinear systems
+  - Melnikov perturbation
+  - observability breakdown
+  - observability phase transition
+  - codimension-one rank transition
+  - blind control regime
+  - Kalman-Hewer equivalence
+  - observability Gramian expansion
+  - controllability-observability duality
+  - Kronecker-free computation
+  - chemical reaction networks
+  - singular descriptor systems
+  - MATLAB
+  - nonlinear dynamics
+  - Chaos Solitons and Fractals
+
+preferred-citation:
+  type: article
+  authors:
+    - family-names: Madhyannapu
+      given-names: Sri Venkata Durga Sudarsan
+      orcid: "https://orcid.org/0009-0001-2126-6428"
+    - family-names: Pradheep Kumar
+      given-names: Sravanam
+  title: >-
+    Melnikov-Based Observability Breakdown in Singular Bilinear
+    Periodic Matrix Differential Systems
+  journal: "Chaos, Solitons and Fractals"
+  publisher:
+    name: Elsevier
+  issn: "0960-0779"
+  year: 2026
+  notes: >-
+    Submitted to Chaos, Solitons and Fractals in 2026. The worked numerical
+    example does not attain an observability breakdown threshold over the
+    tested range; the repository provides direct-integration verification,
+    perturbative Gramian verification, and an independent Python/SciPy
+    cross-check.
